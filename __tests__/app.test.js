@@ -26,5 +26,13 @@ describe("app", () => {
           });
         });
     });
+    test("status:404, responds with a message 'Path not found' when there is an incorrect pathway", () => {
+      return request(app)
+        .get("/api/topic")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Path not found");
+        });
+    });
   });
 });
