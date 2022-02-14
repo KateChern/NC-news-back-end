@@ -1,3 +1,3 @@
 # Back-End Project Northcoders News API
 
-### You must add files .env.test and .env.development in order to successfully connect to the test and development databases locally.
+### You will need to create two .env files in order to successfully connect to the two databases locally: .env.test and .env.development. Into each, add PGDATABASE=nc_news_test, and PGDATABASE=nc_news respectively.
