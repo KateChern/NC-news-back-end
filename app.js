@@ -7,12 +7,15 @@ const {
   updateArticleByIdController,
 } = require("./controllers/articles");
 
+const { getCommentsByArticleIdController } = require("./controllers/comments");
+
 app.use(express.json());
 app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id", getArticleByIdController);
 app.patch("/api/articles/:article_id", updateArticleByIdController);
+app.get("/api/articles/:article_id/comments", getCommentsByArticleIdController);
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) res.status(err.status).send({ msg: err.msg });
