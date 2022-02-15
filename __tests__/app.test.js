@@ -75,4 +75,38 @@ describe("app", () => {
         });
     });
   });
+  describe("GET - /api/articles/:article_id", () => {
+    test("status:200, responds with an article object", () => {
+      return request(app)
+        .get("/api/articles/3")
+        .expect(200)
+        .then(({ body: { article } }) => {
+          expect(article).toEqual({
+            article_id: 3,
+            title: "Eight pug gifs that remind me of mitch",
+            topic: "mitch",
+            body: "some gifs",
+            author: "icellusedkars",
+            created_at: "2020-11-03T09:12:00.000Z",
+            votes: 0,
+          });
+        });
+    });
+    test("status:404, responds with a message 'Article not found' when id doesn't exist", () => {
+      return request(app)
+        .get("/api/articles/999")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Article not found");
+        });
+    });
+    test("status:400, responds with a message 'Bad request' for invalid article_id", () => {
+      return request(app)
+        .get("/api/articles/not-an-id")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad request");
+        });
+    });
+  });
 });
