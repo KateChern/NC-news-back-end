@@ -18,3 +18,11 @@ exports.getArticleById = async (article_id) => {
 
   return result.rows[0];
 };
+
+exports.updateArticleById = async (articleId, updatedVotes) => {
+  const result = await db.query(
+    `UPDATE articles SET votes = $2 WHERE article_id = $1 RETURNING *;`,
+    [articleId, updatedVotes]
+  );
+  return result.rows[0];
+};

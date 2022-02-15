@@ -109,4 +109,82 @@ describe("app", () => {
         });
     });
   });
+  describe("PATCH - /api/articles/:article_id", () => {
+    test("status:200, responds with the updated article object", () => {
+      const articleUpdates = {
+        inc_votes: 10,
+      };
+      return request(app)
+        .patch("/api/articles/3")
+        .send(articleUpdates)
+        .expect(200)
+        .then(({ body: { article } }) => {
+          expect(article).toEqual({
+            article_id: 3,
+            title: "Eight pug gifs that remind me of mitch",
+            topic: "mitch",
+            body: "some gifs",
+            author: "icellusedkars",
+            created_at: "2020-11-03T09:12:00.000Z",
+            votes: 10,
+          });
+        });
+    });
+    test("status:200, responds with the updated article object if the value of updates is empty", () => {
+      const articleUpdates = {
+        inc_votes: "",
+      };
+      return request(app)
+        .patch("/api/articles/3")
+        .send(articleUpdates)
+        .expect(200)
+        .then(({ body: { article } }) => {
+          expect(article).toEqual({
+            article_id: 3,
+            title: "Eight pug gifs that remind me of mitch",
+            topic: "mitch",
+            body: "some gifs",
+            author: "icellusedkars",
+            created_at: "2020-11-03T09:12:00.000Z",
+            votes: 0,
+          });
+        });
+    });
+    test("status:404, responds with a message 'Article not found' when id doesn't exist", () => {
+      const articleUpdates = {
+        inc_votes: 10,
+      };
+      return request(app)
+        .patch("/api/articles/999")
+        .send(articleUpdates)
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Article not found");
+        });
+    });
+    test("status:400, responds with a message 'Bad request' for invalid article_id", () => {
+      const articleUpdates = {
+        inc_votes: 10,
+      };
+      return request(app)
+        .patch("/api/articles/not-an-id")
+        .send(articleUpdates)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad request");
+        });
+    });
+    test("status:400, responds with a message 'Bad request' for invalid body", () => {
+      const articleUpdates = {
+        inc_votes: "hello",
+      };
+      return request(app)
+        .patch("/api/articles/3")
+        .send(articleUpdates)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad request");
+        });
+    });
+  });
 });

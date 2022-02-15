@@ -1,4 +1,8 @@
-const { getArticles, getArticleById } = require("../models/articles");
+const {
+  getArticles,
+  getArticleById,
+  updateArticleById,
+} = require("../models/articles");
 
 exports.getArticles = (req, res, next) => {
   getArticles()
@@ -10,12 +14,34 @@ exports.getArticles = (req, res, next) => {
     });
 };
 
-exports.getArticleById = (req, res, next) => {
+exports.getArticleByIdController = (req, res, next) => {
   const { article_id } = req.params;
 
   getArticleById(article_id)
     .then((article) => {
       res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.updateArticleByIdController = (req, res, next) => {
+  const { article_id: articleId } = req.params;
+
+  getArticleById(articleId)
+    .then((article) => {
+      if (article) {
+        const updatedVotes = (article["votes"] += req.body.inc_votes);
+
+        updateArticleById(articleId, updatedVotes)
+          .then((article) => {
+            res.status(200).send({ article });
+          })
+          .catch((err) => {
+            next(err);
+          });
+      }
     })
     .catch((err) => {
       next(err);
