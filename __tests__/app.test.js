@@ -239,6 +239,7 @@ describe("app", () => {
         username: "lurker",
         body: "test",
       };
+
       return request(app)
         .post("/api/articles/4/comments")
         .send(testComment)
@@ -268,7 +269,20 @@ describe("app", () => {
         });
     });
   });
-  test("status:404, responds with a message 'invalid username or article' when article_id is valid but doesn't exist", () => {
+  test("status:400, responds with a message 'Bad request' for invalid article_id", () => {
+    const testComment = {
+      username: "lurker",
+      body: "test",
+    };
+    return request(app)
+      .post("/api/articles/not-id/comments")
+      .send(testComment)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad request");
+      });
+  });
+  test("status:400, responds with a message 'invalid username or article' when article_id is valid but doesn't exist", () => {
     const testComment = {
       username: "lurker",
       body: "test",
