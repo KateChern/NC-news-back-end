@@ -1,13 +1,18 @@
 const express = require("express");
 const app = express();
 const { getTopics } = require("./controllers/topics");
-const { getArticles, getArticleById } = require("./controllers/articles");
+const {
+  getArticles,
+  getArticleByIdController,
+  updateArticleByIdController,
+} = require("./controllers/articles");
 
 app.use(express.json());
 app.get("/api/topics", getTopics);
 app.get("/api/articles", getArticles);
 
-app.get("/api/articles/:article_id", getArticleById);
+app.get("/api/articles/:article_id", getArticleByIdController);
+app.patch("/api/articles/:article_id", updateArticleByIdController);
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) res.status(err.status).send({ msg: err.msg });

@@ -109,4 +109,26 @@ describe("app", () => {
         });
     });
   });
+  describe("PATCH - /api/articles/:article_id", () => {
+    test("status:200, responds with the updated article object", () => {
+      const articleUpdates = {
+        inc_votes: 10,
+      };
+      return request(app)
+        .patch("/api/articles/3")
+        .send(articleUpdates)
+        .expect(200)
+        .then(({ body: { article } }) => {
+          expect(article).toEqual({
+            article_id: 3,
+            title: "Eight pug gifs that remind me of mitch",
+            topic: "mitch",
+            body: "some gifs",
+            author: "icellusedkars",
+            created_at: "2020-11-03T09:12:00.000Z",
+            votes: 10,
+          });
+        });
+    });
+  });
 });
