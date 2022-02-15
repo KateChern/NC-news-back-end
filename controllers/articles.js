@@ -2,7 +2,6 @@ const {
   getArticles,
   getArticleById,
   updateArticleById,
-  getCommentsByArticleId,
 } = require("../models/articles");
 
 exports.getArticles = (req, res, next) => {
@@ -43,18 +42,6 @@ exports.updateArticleByIdController = (req, res, next) => {
             next(err);
           });
       }
-    })
-    .catch((err) => {
-      next(err);
-    });
-};
-
-exports.getCommentsByArticleIdController = (req, res, next) => {
-  const { article_id: articleId } = req.params;
-
-  getCommentsByArticleId(articleId)
-    .then((comments) => {
-      res.status(200).send({ comments });
     })
     .catch((err) => {
       next(err);

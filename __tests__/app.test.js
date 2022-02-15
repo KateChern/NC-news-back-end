@@ -187,7 +187,7 @@ describe("app", () => {
         });
     });
   });
-  describe.only("GET - /api/articles/:article_id/comments", () => {
+  describe("GET - /api/articles/:article_id/comments", () => {
     test("status:200, responds with an array of comments objects", () => {
       return request(app)
         .get("/api/articles/1/comments")
@@ -206,6 +206,30 @@ describe("app", () => {
               })
             );
           });
+        });
+    });
+    test("status:200, responds with an empty array when theres are no comments associated with article_id", () => {
+      return request(app)
+        .get("/api/articles/2/comments")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments).toHaveLength(0);
+        });
+    });
+    test("status:400, responds with a message 'Bad request' for invalid article_id", () => {
+      return request(app)
+        .get("/api/articles/not-an-id/comments")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad request");
+        });
+    });
+    test("status:404, responds with a message 'Article not found' when article_id is valid but doesn't exist", () => {
+      return request(app)
+        .get("/api/articles/999/comments")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Article not found");
         });
     });
   });

@@ -5,8 +5,9 @@ const {
   getArticles,
   getArticleByIdController,
   updateArticleByIdController,
-  getCommentsByArticleIdController,
 } = require("./controllers/articles");
+
+const { getCommentsByArticleIdController } = require("./controllers/comments");
 
 app.use(express.json());
 app.get("/api/topics", getTopics);
