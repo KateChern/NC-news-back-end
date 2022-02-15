@@ -26,3 +26,11 @@ exports.updateArticleById = async (articleId, updatedVotes) => {
   );
   return result.rows[0];
 };
+
+exports.getCommentsByArticleId = async (articleId) => {
+  const result = await db.query(
+    `SELECT * FROM comments WHERE article_id = $1;`,
+    [articleId]
+  );
+  return result.rows;
+};

@@ -187,4 +187,26 @@ describe("app", () => {
         });
     });
   });
+  describe.only("GET - /api/articles/:article_id/comments", () => {
+    test("status:200, responds with an array of comments objects", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments).toHaveLength(11);
+          expect(comments).toBeInstanceOf(Array);
+          comments.forEach((comment) => {
+            expect(comment).toEqual(
+              expect.objectContaining({
+                comment_id: expect.any(Number),
+                votes: expect.any(Number),
+                body: expect.any(String),
+                author: expect.any(String),
+                created_at: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+  });
 });
