@@ -295,4 +295,17 @@ describe("app", () => {
         });
     });
   });
+  describe("DELETE /api/comments/:comment_id", () => {
+    test("status:204, deletes comment", () => {
+      return request(app).delete("/api/comments/1").expect(204);
+    });
+    test("status:400, responds with a message 'Bad request' for invalid comment_id", () => {
+      return request(app)
+        .delete("/api/comments/not-id")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad request");
+        });
+    });
+  });
 });
