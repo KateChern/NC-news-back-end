@@ -281,7 +281,7 @@ describe("app", () => {
           expect(msg).toBe("Bad request");
         });
     });
-    test("status:400, responds with a message 'invalid username or article' when article_id is valid but doesn't exist", () => {
+    test("status:400, responds with a message 'Article not found' when article_id is valid but doesn't exist", () => {
       const testComment = {
         username: "lurker",
         body: "test",
@@ -289,9 +289,9 @@ describe("app", () => {
       return request(app)
         .post("/api/articles/20/comments")
         .send(testComment)
-        .expect(400)
+        .expect(404)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("invalid username or article");
+          expect(msg).toBe("Article not found");
         });
     });
   });

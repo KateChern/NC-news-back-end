@@ -25,11 +25,17 @@ exports.getCommentsByArticleIdController = (req, res, next) => {
 
 exports.addCommentToArticle = (req, res, next) => {
   const { article_id: articleId } = req.params;
-
-  addComment(req.body, articleId)
-    .then((comment) => {
-      //   console.log(comment, "controllers");
-      res.status(201).send({ comment });
+  checkArticleExists(articleId)
+    .then((article) => {
+      if (article) {
+        addComment(req.body, articleId)
+          .then((comment) => {
+            res.status(201).send({ comment });
+          })
+          .catch((err) => {
+            next(err);
+          });
+      }
     })
     .catch((err) => {
       next(err);
@@ -38,6 +44,7 @@ exports.addCommentToArticle = (req, res, next) => {
 
 exports.deleteCommentController = (req, res, next) => {
   const { comment_id: commentId } = req.params;
+
   deleteComment(commentId)
     .then((comments) => {
       res.status(204).send({ comments });
