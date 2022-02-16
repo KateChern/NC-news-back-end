@@ -268,31 +268,44 @@ describe("app", () => {
           expect(msg).toBe("invalid username or article");
         });
     });
+    test("status:400, responds with a message 'Bad request' for invalid article_id", () => {
+      const testComment = {
+        username: "lurker",
+        body: "test",
+      };
+      return request(app)
+        .post("/api/articles/not-id/comments")
+        .send(testComment)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad request");
+        });
+    });
+    test("status:400, responds with a message 'Article not found' when article_id is valid but doesn't exist", () => {
+      const testComment = {
+        username: "lurker",
+        body: "test",
+      };
+      return request(app)
+        .post("/api/articles/20/comments")
+        .send(testComment)
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Article not found");
+        });
+    });
   });
-  test("status:400, responds with a message 'Bad request' for invalid article_id", () => {
-    const testComment = {
-      username: "lurker",
-      body: "test",
-    };
-    return request(app)
-      .post("/api/articles/not-id/comments")
-      .send(testComment)
-      .expect(400)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad request");
-      });
-  });
-  test("status:400, responds with a message 'invalid username or article' when article_id is valid but doesn't exist", () => {
-    const testComment = {
-      username: "lurker",
-      body: "test",
-    };
-    return request(app)
-      .post("/api/articles/20/comments")
-      .send(testComment)
-      .expect(400)
-      .then(({ body: { msg } }) => {
-        expect(msg).toBe("invalid username or article");
-      });
+  describe("DELETE /api/comments/:comment_id", () => {
+    test("status:204, deletes comment", () => {
+      return request(app).delete("/api/comments/1").expect(204);
+    });
+    test("status:400, responds with a message 'Bad request' for invalid comment_id", () => {
+      return request(app)
+        .delete("/api/comments/not-id")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad request");
+        });
+    });
   });
 });
