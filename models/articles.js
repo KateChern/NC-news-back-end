@@ -2,7 +2,7 @@ const db = require("../db/connection");
 
 exports.getArticles = async () => {
   const result = await db.query(
-    `SELECT articles.* , COUNT(comments.article_id) AS count FROM articles
+    `SELECT articles.* , COUNT(comments.article_id) AS comments_count FROM articles
     LEFT JOIN comments
     ON articles.article_id = comments.article_id
     GROUP BY articles.article_id

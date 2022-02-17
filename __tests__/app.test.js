@@ -53,7 +53,23 @@ describe("app", () => {
                 author: expect.any(String),
                 created_at: expect.any(String),
                 votes: expect.any(Number),
-                count: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+    test("status:200, responds with an array of articles objects with new column 'comments_count'", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toHaveLength(12);
+          expect(articles).toBeInstanceOf(Array);
+          expect(articles[4].comments_count).toEqual("2");
+          articles.forEach((article) => {
+            expect(article).toEqual(
+              expect.objectContaining({
+                comments_count: expect.any(String),
               })
             );
           });
