@@ -53,7 +53,23 @@ describe("app", () => {
                 author: expect.any(String),
                 created_at: expect.any(String),
                 votes: expect.any(Number),
-                count: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+    test("status:200, responds with an array of articles objects with new column 'comments_count'", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toHaveLength(12);
+          expect(articles).toBeInstanceOf(Array);
+          expect(articles[4].comments_count).toEqual("2");
+          articles.forEach((article) => {
+            expect(article).toEqual(
+              expect.objectContaining({
+                comments_count: expect.any(String),
               })
             );
           });
@@ -306,6 +322,32 @@ describe("app", () => {
         .expect(400)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("Bad request");
+        });
+    });
+  });
+  describe("GET - /api/users", () => {
+    test("status:200, responds with an array of users objects", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body: { users } }) => {
+          expect(users).toHaveLength(4);
+          expect(users).toBeInstanceOf(Array);
+          users.forEach((user) => {
+            expect(user).toEqual(
+              expect.objectContaining({
+                username: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+    test("status:404, responds with a message 'Path not found' when there is an incorrect pathway", () => {
+      return request(app)
+        .get("/api/user")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Path not found");
         });
     });
   });
