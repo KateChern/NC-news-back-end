@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const { getTopics } = require("./controllers/topics");
 const { getUsers } = require("./controllers/users");
+const { getEndpointsController } = require("./controllers/endpoints");
 const {
   getArticles,
   getArticleByIdController,
@@ -30,6 +31,7 @@ app.patch("/api/articles/:article_id", updateArticleByIdController);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleIdController);
 app.post("/api/articles/:article_id/comments", addCommentToArticle);
 app.delete("/api/comments/:comment_id", deleteCommentController);
+app.get("/api", getEndpointsController);
 
 app.use(handleCustomErrors);
 app.use(handlePsqlErrors);
