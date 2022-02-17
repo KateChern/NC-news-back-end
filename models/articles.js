@@ -1,6 +1,22 @@
 const db = require("../db/connection");
 
 exports.getArticles = async (sort_by = "created_at", order = "desc") => {
+  const greenListSortBy = [
+    "created_at",
+    "title",
+    "topic",
+    "author",
+    "votes",
+    "body",
+  ];
+  const greenListOrderBy = ["asc", "desc"];
+
+  if (!greenListSortBy.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+  if (!greenListOrderBy.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
   const result = await db.query(
     `SELECT articles.* , COUNT(comments.article_id) AS comments_count FROM articles
     LEFT JOIN comments

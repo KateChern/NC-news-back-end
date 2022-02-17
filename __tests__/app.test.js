@@ -99,12 +99,28 @@ describe("app", () => {
           expect(articles).toBeSortedBy("topic", { descending: true });
         });
     });
+    test("status:400, for invalid sort_by query", () => {
+      return request(app)
+        .get("/api/articles?sort_by=invalid_text")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad request");
+        });
+    });
     test("status:200, allow a client to change the sort order with an order query", () => {
       return request(app)
         .get("/api/articles?order=asc")
         .expect(200)
         .then(({ body: { articles } }) => {
           expect(articles).toBeSortedBy("created_at", { ascending: true });
+        });
+    });
+    test("status:400, for invalid order query", () => {
+      return request(app)
+        .get("/api/articles?order=falsy")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad request");
         });
     });
   });
