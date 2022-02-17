@@ -91,6 +91,54 @@ describe("app", () => {
           expect(articles).toBeSortedBy("created_at", { descending: true });
         });
     });
+    test("status:200, accepts sort_by query", () => {
+      return request(app)
+        .get("/api/articles?sort_by=topic")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy("topic", { descending: true });
+        });
+    });
+    test("status:400, for invalid sort_by query", () => {
+      return request(app)
+        .get("/api/articles?sort_by=invalid_text")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad request");
+        });
+    });
+    test("status:200, allow a client to change the sort order with an order query", () => {
+      return request(app)
+        .get("/api/articles?order=asc")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy("created_at", { ascending: true });
+        });
+    });
+    test("status:400, for invalid order query", () => {
+      return request(app)
+        .get("/api/articles?order=falsy")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad request");
+        });
+    });
+    test("status:200, accepts topic query", () => {
+      return request(app)
+        .get("/api/articles?topic=cats")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toHaveLength(1);
+        });
+    });
+    test("status:404, for invalid topic", () => {
+      return request(app)
+        .get("/api/articles?topic=some-invalid-topic")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Topic not found");
+        });
+    });
   });
   describe("GET - /api/articles/:article_id", () => {
     test("status:200, responds with an article object", () => {
