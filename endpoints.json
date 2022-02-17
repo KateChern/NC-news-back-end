@@ -34,7 +34,7 @@
     }
   },
   "GET /api/articles/:article_id": {
-    "description": "serves an object with an article",
+    "description": "serves an article object from the id requested",
     "queries": ["article_id"],
     "exampleResponse": {
       "article": {
@@ -50,10 +50,11 @@
     }
   },
   "PATCH /api/articles/:article_id": {
-    "description": "serves an object with the updated article",
+    "description": "serves an article object with the votes either incremented or decremented by the given patch object value",
     "queries": ["article_id"],
+    "exampleRequest": { "inc_votes": 10 },
     "exampleResponse": {
-      "topics": {
+      "articles": {
         "article_id": 3,
         "title": "Eight pug gifs that remind me of mitch",
         "topic": "mitch",
@@ -81,8 +82,12 @@
     }
   },
   "POST /api/articles/:article_id/comments": {
-    "description": "serves an object of added comment",
+    "description": "serves a new comment object with the article id chosen in the path",
     "queries": ["article_id"],
+    "exampleRequest": {
+      "username": "icellusedkars",
+      "body": "This is the new comment"
+    },
     "exampleResponse": {
       "comment": {
         "comment_id": 19,
