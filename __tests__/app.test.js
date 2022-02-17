@@ -123,6 +123,22 @@ describe("app", () => {
           expect(msg).toBe("Bad request");
         });
     });
+    test("status:200, accepts topic query", () => {
+      return request(app)
+        .get("/api/articles?topic=cats")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toHaveLength(1);
+        });
+    });
+    test("status:400, for invalid topic", () => {
+      return request(app)
+        .get("/api/articles?topic=some-invalid-topic")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Topic not found");
+        });
+    });
   });
   describe("GET - /api/articles/:article_id", () => {
     test("status:200, responds with an article object", () => {
