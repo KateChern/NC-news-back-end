@@ -131,7 +131,7 @@ describe("app", () => {
           expect(articles).toHaveLength(1);
         });
     });
-    test("status:400, for invalid topic", () => {
+    test("status:404, for invalid topic", () => {
       return request(app)
         .get("/api/articles?topic=some-invalid-topic")
         .expect(404)
