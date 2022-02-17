@@ -91,6 +91,22 @@ describe("app", () => {
           expect(articles).toBeSortedBy("created_at", { descending: true });
         });
     });
+    test("status:200, accepts sort_by query", () => {
+      return request(app)
+        .get("/api/articles?sort_by=topic")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy("topic", { descending: true });
+        });
+    });
+    test("status:200, allow a client to change the sort order with an order query", () => {
+      return request(app)
+        .get("/api/articles?order=asc")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSortedBy("created_at", { ascending: true });
+        });
+    });
   });
   describe("GET - /api/articles/:article_id", () => {
     test("status:200, responds with an article object", () => {
