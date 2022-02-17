@@ -151,10 +151,24 @@ describe("app", () => {
             title: "Eight pug gifs that remind me of mitch",
             topic: "mitch",
             body: "some gifs",
+            comment_count: "2",
             author: "icellusedkars",
             created_at: "2020-11-03T09:12:00.000Z",
             votes: 0,
           });
+        });
+    });
+    test("status:200, responds with an array of articles objects with new column 'comments_count'", () => {
+      return request(app)
+        .get("/api/articles/9")
+        .expect(200)
+        .then(({ body: { article } }) => {
+          expect(article.comment_count).toEqual("2");
+          expect(article).toEqual(
+            expect.objectContaining({
+              comment_count: expect.any(String),
+            })
+          );
         });
     });
     test("status:404, responds with a message 'Article not found' when id doesn't exist", () => {
