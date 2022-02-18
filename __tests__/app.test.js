@@ -506,5 +506,23 @@ describe("app", () => {
           expect(msg).toBe("Comment not found");
         });
     });
+    test("status 200: responds with unchanged comment when passed a misspelt key on patch object", () => {
+      const testUpdate = { inc_votessss: "10" };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(testUpdate)
+        .expect(200)
+        .then(({ body }) => {
+          const { comment } = body;
+          expect(comment).toMatchObject({
+            comment_id: 1,
+            body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+            votes: 16,
+            author: "butter_bridge",
+            article_id: 9,
+            created_at: expect.any(String),
+          });
+        });
+    });
   });
 });

@@ -56,10 +56,13 @@ exports.deleteCommentController = (req, res, next) => {
 exports.updateCommentByIdController = (req, res, next) => {
   const { comment_id: commentId } = req.params;
   const { inc_votes: incVotes } = req.body;
+  let newIncValue = incVotes;
+
+  if (!incVotes) newIncValue = 0;
 
   checkCommentExists(commentId)
     .then((comment) => {
-      const updatedVotes = (comment["votes"] += incVotes);
+      const updatedVotes = (comment["votes"] += newIncValue);
       if (comment) {
         updateCommentById(commentId, updatedVotes)
           .then((comment) => {
