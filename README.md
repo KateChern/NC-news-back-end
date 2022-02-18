@@ -10,11 +10,9 @@ API has been hosted with Heroku [here](https://northcoders-news-b-end.herokuapp.
 
 Please ensure the following are installed:
 
-Node: v16.13.2
-Postgres: ^8.7.3
-npm: v8.1.2
-dotenv: ^16.0.0,
-express: ^4.17.2
+- node: v16.13.2
+- postgres: ^8.7.3
+- npm: v8.1.2
 
 ## Getting Started
 
@@ -66,7 +64,7 @@ npm run setup-dbs
 npm start
 ```
 
-This will run the server on port 9090. All endpoints can be found locally on http://localhost:9090/api.
+This will run the server on port 9090. All endpoints can be found locally on `http://localhost:9090`.
 
 ## Testing
 
