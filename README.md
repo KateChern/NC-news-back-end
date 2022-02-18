@@ -125,6 +125,18 @@ DELETE /api/comments/:comment_id
 deletes the selected comment from the list of all comments
 
 ```
+GET /api/users/:username
+```
+
+returns a user corresponding to the username passed in
+
+```
+PATCH /api/comments/:comment_id
+```
+
+modifies the votes on the requested comment
+
+```
 GET /api
 ```
 
