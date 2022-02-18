@@ -3,11 +3,9 @@ const {
   addComment,
   deleteComment,
   updateCommentById,
-} = require("../models/comments");
-const {
-  checkArticleExists,
   checkCommentExists,
-} = require("../models/articles");
+} = require("../models/comments");
+const { checkArticleExists } = require("../models/articles");
 
 exports.getCommentsByArticleIdController = (req, res, next) => {
   const { article_id: articleId } = req.params;
@@ -59,9 +57,18 @@ exports.updateCommentByIdController = (req, res, next) => {
   const { comment_id: commentId } = req.params;
   const { inc_votes: incVotes } = req.body;
 
-  updateCommentById(commentId, incVotes)
+  checkCommentExists(commentId)
     .then((comment) => {
-      res.status(200).send({ comment });
+      const updatedVotes = (comment["votes"] += incVotes);
+      if (comment) {
+        updateCommentById(commentId, updatedVotes)
+          .then((comment) => {
+            res.status(200).send({ comment });
+          })
+          .catch((err) => {
+            next(err);
+          });
+      }
     })
     .catch((err) => {
       next(err);

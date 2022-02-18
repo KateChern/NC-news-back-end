@@ -469,5 +469,42 @@ describe("app", () => {
           });
         });
     });
+    test("status: 400, responds with a message 'Bad request' for invalid body object", () => {
+      const testUpdate = { inc_votes: "not-a-number" };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(testUpdate)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad request");
+        });
+    });
+    test("status:200, returns unchanged comment when missing data on the patch object", () => {
+      const testUpdate = { inc_votes: "" };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(testUpdate)
+        .expect(200)
+        .then(({ body: { comment } }) => {
+          expect(comment).toMatchObject({
+            comment_id: 1,
+            body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+            votes: 16,
+            author: "butter_bridge",
+            article_id: 9,
+            created_at: expect.any(String),
+          });
+        });
+    });
+    test("status:404, responds with a message 'Comment not found' when id is valid but doesn't exist", () => {
+      const testUpdate = { inc_votes: 10 };
+      return request(app)
+        .patch("/api/comments/10000")
+        .send(testUpdate)
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Comment not found");
+        });
+    });
   });
 });
