@@ -103,5 +103,33 @@
     "description": "deletes selected comment from the array of all comments",
     "queries": ["comment_id"],
     "exampleResponse": {}
+  },
+  "GET /api/users/:username": {
+    "description": "serves a user object from the username requested",
+    "queries": ["username"],
+    "exampleResponse": {
+      "user": [
+        {
+          "username": "rogersop",
+          "name": "paul",
+          "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
+        }
+      ]
+    }
+  },
+  "PATCH /api/comments/:comment_id": {
+    "description": "serves a comment object with the votes either incremented or decremented by the given patch object value",
+    "queries": ["comment_id"],
+    "exampleRequest": { "inc_votes": 10 },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 1,
+        "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        "votes": 16,
+        "author": "butter_bridge",
+        "article_id": 9,
+        "created_at": "2020-11-03T09:12:00.000Z"
+      }
+    }
   }
 }
