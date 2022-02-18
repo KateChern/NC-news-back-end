@@ -27,7 +27,7 @@ exports.checkCommentExists = async (commentId) => {
   if (result.rows.length === 0) {
     return Promise.reject({ status: 404, msg: "Comment not found" });
   }
-  return result.rows;
+  return result.rows[0];
 };
 
 exports.deleteComment = async (commentId) => {
@@ -36,4 +36,12 @@ exports.deleteComment = async (commentId) => {
   ]);
 
   return result.rows;
+};
+
+exports.updateCommentById = async (commentId, updatedVotes) => {
+  const result = await db.query(
+    `UPDATE comments SET votes = $2 WHERE comment_id = $1 RETURNING *;`,
+    [commentId, updatedVotes]
+  );
+  return result.rows[0];
 };

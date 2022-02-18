@@ -13,6 +13,7 @@ const {
   getCommentsByArticleIdController,
   addCommentToArticle,
   deleteCommentController,
+  updateCommentByIdController,
 } = require("./controllers/comments");
 
 const {
@@ -31,6 +32,7 @@ app.get("/api/articles/:article_id", getArticleByIdController);
 app.patch("/api/articles/:article_id", updateArticleByIdController);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleIdController);
 app.post("/api/articles/:article_id/comments", addCommentToArticle);
+app.patch("/api/comments/:comment_id", updateCommentByIdController);
 app.delete("/api/comments/:comment_id", deleteCommentController);
 app.get("/api", getEndpointsController);
 

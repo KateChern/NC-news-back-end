@@ -2,11 +2,10 @@ const {
   getCommentsByArticleId,
   addComment,
   deleteComment,
-} = require("../models/comments");
-const {
-  checkArticleExists,
+  updateCommentById,
   checkCommentExists,
-} = require("../models/articles");
+} = require("../models/comments");
+const { checkArticleExists } = require("../models/articles");
 
 exports.getCommentsByArticleIdController = (req, res, next) => {
   const { article_id: articleId } = req.params;
@@ -48,6 +47,31 @@ exports.deleteCommentController = (req, res, next) => {
   deleteComment(commentId)
     .then((comments) => {
       res.status(204).send({ comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.updateCommentByIdController = (req, res, next) => {
+  const { comment_id: commentId } = req.params;
+  const { inc_votes: incVotes } = req.body;
+  let newIncValue = incVotes;
+
+  if (!incVotes) newIncValue = 0;
+
+  checkCommentExists(commentId)
+    .then((comment) => {
+      const updatedVotes = (comment["votes"] += newIncValue);
+      if (comment) {
+        updateCommentById(commentId, updatedVotes)
+          .then((comment) => {
+            res.status(200).send({ comment });
+          })
+          .catch((err) => {
+            next(err);
+          });
+      }
     })
     .catch((err) => {
       next(err);

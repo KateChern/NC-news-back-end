@@ -434,27 +434,118 @@ describe("app", () => {
         });
     });
   });
-  describe("GET - /api/users/:username", () => {
-    test("status:200, responds with a user object", () => {
+  describe("PATCH /api/comments/:comment_id", () => {
+    test("status:200, returns updated comment and increments votes correctly", () => {
+      const testUpdate = { inc_votes: 10 };
       return request(app)
-        .get("/api/users/rogersop")
+        .patch("/api/comments/1")
+        .send(testUpdate)
         .expect(200)
-        .then(({ body: { user } }) => {
-          expect(user).toEqual({
-            username: "rogersop",
-            name: "paul",
-            avatar_url:
-              "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
+        .then(({ body: { comment } }) => {
+          expect(comment).toMatchObject({
+            comment_id: 1,
+            body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+            votes: 26,
+            author: "butter_bridge",
+            article_id: 9,
+            created_at: expect.any(String),
           });
         });
     });
-    test("status:404, responds with a message 'User not found' when username doesn't exist", () => {
+    test("status:200, returns updated comment and decrements votes correctly", () => {
+      const testUpdate = { inc_votes: -10 };
       return request(app)
-        .get("/api/users/not-a-user")
+        .patch("/api/comments/1")
+        .send(testUpdate)
+        .expect(200)
+        .then(({ body: { comment } }) => {
+          expect(comment).toMatchObject({
+            comment_id: 1,
+            body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+            votes: 6,
+            author: "butter_bridge",
+            article_id: 9,
+            created_at: expect.any(String),
+          });
+        });
+    });
+    test("status: 400, responds with a message 'Bad request' for invalid body object", () => {
+      const testUpdate = { inc_votes: "not-a-number" };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(testUpdate)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Bad request");
+        });
+    });
+    test("status:200, returns unchanged comment when missing data on the patch object", () => {
+      const testUpdate = { inc_votes: "" };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(testUpdate)
+        .expect(200)
+        .then(({ body: { comment } }) => {
+          expect(comment).toMatchObject({
+            comment_id: 1,
+            body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+            votes: 16,
+            author: "butter_bridge",
+            article_id: 9,
+            created_at: expect.any(String),
+          });
+        });
+    });
+    test("status:404, responds with a message 'Comment not found' when id is valid but doesn't exist", () => {
+      const testUpdate = { inc_votes: 10 };
+      return request(app)
+        .patch("/api/comments/10000")
+        .send(testUpdate)
         .expect(404)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("User not found");
+          expect(msg).toBe("Comment not found");
         });
+    });
+    test("status 200: responds with unchanged comment when passed a misspelt key on patch object", () => {
+      const testUpdate = { inc_votessss: "10" };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(testUpdate)
+        .expect(200)
+        .then(({ body }) => {
+          const { comment } = body;
+          expect(comment).toMatchObject({
+            comment_id: 1,
+            body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+            votes: 16,
+            author: "butter_bridge",
+            article_id: 9,
+            created_at: expect.any(String),
+          });
+        });
+    });
+    describe("GET - /api/users/:username", () => {
+      test("status:200, responds with a user object", () => {
+        return request(app)
+          .get("/api/users/rogersop")
+          .expect(200)
+          .then(({ body: { user } }) => {
+            expect(user).toEqual({
+              username: "rogersop",
+              name: "paul",
+              avatar_url:
+                "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
+            });
+          });
+      });
+      test("status:404, responds with a message 'User not found' when username doesn't exist", () => {
+        return request(app)
+          .get("/api/users/not-a-user")
+          .expect(404)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("User not found");
+          });
+      });
     });
   });
 });
