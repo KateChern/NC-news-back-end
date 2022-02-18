@@ -434,4 +434,40 @@ describe("app", () => {
         });
     });
   });
+  describe("PATCH /api/comments/:comment_id", () => {
+    test("status:200, returns updated comment and increments votes correctly", () => {
+      const testUpdate = { inc_votes: 10 };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(testUpdate)
+        .expect(200)
+        .then(({ body: { comment } }) => {
+          expect(comment).toMatchObject({
+            comment_id: 1,
+            body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+            votes: 26,
+            author: "butter_bridge",
+            article_id: 9,
+            created_at: expect.any(String),
+          });
+        });
+    });
+    test("status:200, returns updated comment and decrements votes correctly", () => {
+      const testUpdate = { inc_votes: -10 };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(testUpdate)
+        .expect(200)
+        .then(({ body: { comment } }) => {
+          expect(comment).toMatchObject({
+            comment_id: 1,
+            body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+            votes: 6,
+            author: "butter_bridge",
+            article_id: 9,
+            created_at: expect.any(String),
+          });
+        });
+    });
+  });
 });
